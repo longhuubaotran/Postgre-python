@@ -1,6 +1,7 @@
 FROM python:3.12.2-slim
 
 ENV APP_HOME /app
+ENV PYTHONPATH /app
 
 WORKDIR ${APP_HOME}
 

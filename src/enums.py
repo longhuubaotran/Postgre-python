@@ -1,6 +1,6 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class RoleTypes(Enum):
+class RoleTypes(StrEnum):
     ADMIN = 'admin'
     VIEWER = 'viewer'

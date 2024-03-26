@@ -9,7 +9,7 @@ services:
           PORT: 8080
           DB_USER: root
           DB_PASS: password
-      command: "sh -c 'sleep infinity'"
+      command: "tail -f /dev/null"
       ports:
           - 8080:8080
 

@@ -1,16 +1,10 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from typing import List, Optional
-# from ..enums import RoleTypes
-from enum import Enum
+from src.enums import RoleTypes
 
 from sqlalchemy import ForeignKey, DateTime
 import datetime
 from sqlalchemy.sql import func
-
-
-class RoleTypes(Enum):
-    ADMIN = 'admin'
-    VIEWER = 'viewer'
 
 
 class Base(DeclarativeBase):
@@ -122,3 +116,170 @@ class Person(Base):
     __tablename__ = "Person"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
+
+
+"""
+class OrganizationDb(BaseDb):
+    __tablename__ = "organizations"
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(255))
+
+    def __repr__(self) -> str:
+        return f"OrganizationDb(id={self.id!r}, name={self.name!r})"
+
+
+class MemberDb(BaseDb):
+    __tablename__ = "members"
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    org_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            f"{OrganizationDb.__tablename__}.id",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        )
+    )
+    uid: Mapped[str] = mapped_column(String())
+    name: Mapped[str] = mapped_column(String(255))
+    role: Mapped[str] = mapped_column(String(32))
+
+    def __repr__(self) -> str:
+        details = ", ".join(
+            [
+                f"id={self.id!r}",
+                f"org_id={self.org_id!r}",
+                f"name={self.name!r}",
+                f"role={self.role!r}",
+            ]
+        )
+        return f"MemberDb({details})"
+
+
+class APIKeyDb(BaseDb):
+    __tablename__ = "api_keys"
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    org_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            f"{OrganizationDb.__tablename__}.id",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        )
+    )
+    name: Mapped[str] = mapped_column(String(255))
+    key: Mapped[str] = mapped_column(String(512))
+    expire_at: Mapped[Optional[datetime]] = mapped_column(default=None, nullable=True)
+
+    def __repr__(self) -> str:
+        details = ", ".join(
+            [
+                f"id={self.id!r}",
+                f"org_id={self.org_id!r}",
+                f"name={self.name!r}",
+                f"key={self.key[:3]}***{self.key[-3:]}",
+                f"expire_at={self.expire_at!r}",
+            ]
+        )
+        return f"APIKeyDb({details})"
+
+
+class NamespaceDb(BaseDb):
+    __tablename__ = "namespaces"
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    org_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            f"{OrganizationDb.__tablename__}.id",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        )
+    )
+    description: Mapped[str] = mapped_column(Text)
+
+    def __repr__(self) -> str:
+        details = ", ".join(
+            [
+                f"id={self.id!r}",
+                f"org_id={self.org_id!r}",
+                f"description={self.description!r}",
+            ]
+        )
+        return f"Namespace({details})"
+
+
+class MemberKeyDb(BaseDb):
+    __tablename__ = "member_keys"
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    org_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            f"{OrganizationDb.__tablename__}.id",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        )
+    )
+    member_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            f"{MemberDb.__tablename__}.id",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        )
+    )
+    key_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            f"{APIKeyDb.__tablename__}.id",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        )
+    )
+
+    def __repr__(self) -> str:
+        details = ", ".join(
+            [
+                f"id={self.id!r}",
+                f"org_id={self.org_id!r}",
+                f"member_id={self.member_id!r}",
+                f"key_id={self.key_id!r}",
+            ]
+        )
+        return f"MemberKeyDb({details})"
+
+
+class NamespaceKeyDb(BaseDb):
+    __tablename__ = "namespace_keys"
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    org_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            f"{OrganizationDb.__tablename__}.id",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        )
+    )
+    namespace_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            f"{NamespaceDb.__tablename__}.id",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        )
+    )
+    key_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            f"{APIKeyDb.__tablename__}.id",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        )
+    )
+
+    def __repr__(self) -> str:
+        details = ", ".join(
+            [
+                f"id={self.id!r}",
+                f"org_id={self.org_id!r}",
+                f"key_id={self.key_id!r}",
+            ]
+        )
+        return f"MemberKeyDb({details})"
+
+"""
